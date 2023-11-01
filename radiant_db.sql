@@ -3,25 +3,25 @@ create database radiant_db;
 use radiant_db;
 
 CREATE TABLE users(
-    user_id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
+                      user_id INT PRIMARY KEY AUTO_INCREMENT,
+                      username VARCHAR(255) NOT NULL,
+                      password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE music (
-    music_id INT PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(255) NOT NULL,
-    artist_name VARCHAR(255) NOT NULL,
-    length_sec INT NOT NULL
+                       music_id INT PRIMARY KEY AUTO_INCREMENT,
+                       title VARCHAR(255) NOT NULL,
+                       artist_name VARCHAR(255) NOT NULL,
+                       length_sec INT NOT NULL
 );
 
 CREATE TABLE user_music (
-    user_id INT,
-    music_id INT,
-    status ENUM('INCOMEPLETE', 'IN-PROGRESS', 'COMPLETE'),
-    primary key(music_id, user_id),
-    foreign key (music_id) references music(music_id),
-    foreign key (user_id) references users(user_id)
+                            user_id INT,
+                            music_id INT,
+                            status ENUM('INCOMPLETE', 'IN-PROGRESS', 'COMPLETE'),
+                            primary key(music_id, user_id),
+                            foreign key (music_id) references music(music_id),
+                            foreign key (user_id) references users(user_id)
 );
 
 -- Music
@@ -43,13 +43,24 @@ insert into users(username, password) values('Bryan', 'Hiphop');
 insert into users(username, password) values('Darshan', 'EDM');
 
 -- User_Music
-insert into user_music(user_id, music_id, status) values(1, 1, 'INCOMEPLETE');
-insert into user_music(user_id, music_id, status) values(1, 2, 'INCOMEPLETE');
-insert into user_music(user_id, music_id, status) values(1, 3, 'INCOMEPLETE');
-insert into user_music(user_id, music_id, status) values(1, 4, 'INCOMEPLETE');
-insert into user_music(user_id, music_id, status) values(2, 5, 'INCOMEPLETE');
-insert into user_music(user_id, music_id, status) values(2, 6, 'INCOMEPLETE');
-insert into user_music(user_id, music_id, status) values(3, 7, 'INCOMEPLETE');
-insert into user_music(user_id, music_id, status) values(3, 8, 'INCOMEPLETE');
-insert into user_music(user_id, music_id, status) values(4, 9, 'INCOMEPLETE');
-insert into user_music(user_id, music_id, status) values(4, 10, 'INCOMEPLETE');
+-- insert into user_music(user_id, music_id, status) values(1, 1, 'INCOMPLETE');
+-- insert into user_music(user_id, music_id, status) values(1, 2, 'INCOMPLETE');
+-- insert into user_music(user_id, music_id, status) values(1, 3, 'INCOMPLETE');
+-- insert into user_music(user_id, music_id, status) values(1, 4, 'INCOMPLETE');
+-- insert into user_music(user_id, music_id, status) values(1, 5, 'IN-PROGRESS');
+-- insert into user_music(user_id, music_id, status) values(1, 6, 'COMPLETE');
+-- insert into user_music(user_id, music_id, status) values(1, 7, 'IN-PROGRESS');
+-- insert into user_music(user_id, music_id, status) values(3, 8, 'INCOMPLETE');
+-- insert into user_music(user_id, music_id, status) values(4, 9, 'INCOMPLETE');
+-- insert into user_music(user_id, music_id, status) values(4, 10, 'INCOMPLETE');
+
+-- update user_music set status = 'IN-PROGRESS' where user_id = 1 AND music_id = 1;
+-- select * from user_music;
+-- SELECT * FROM USERS;
+
+-- SELECT * FROM music WHERE music_id IN (SELECT music_id FROM user_music WHERE status = 'INCOMEPLETE' AND user_id = 1);
+-- select * from user_music where user_id = 1;
+
+-- SELECT status FROM user_music where user_id = 1 AND music_id = 1;
+
+-- SELECT status FROM user_music where user_id = 1 AND music_id = 8;
