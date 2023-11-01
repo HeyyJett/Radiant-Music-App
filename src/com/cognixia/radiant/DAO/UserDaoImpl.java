@@ -12,6 +12,7 @@ import com.cognixia.radiant.connection.ConnectionManager;
 import com.cognixia.radiant.exceptions.InvalidLoginException;
 
 public class UserDaoImpl implements UserDao{
+
     private static Optional<User> currUser;
     private Connection connection = null;
 
@@ -55,12 +56,12 @@ public class UserDaoImpl implements UserDao{
                 int user_id = rs.getInt("user_id");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
+                String permission = rs.getString("permission");
 
                 rs.close();
 
-                User userObj = new User(user_id, username, password);
+                User userObj = new User(user_id, username, password, permission);
                 Optional<User> userFound = Optional.of(userObj);
-
 
                 currUser = userFound;
                 return userFound;
@@ -80,10 +81,11 @@ public class UserDaoImpl implements UserDao{
         return currUser;
     }
 
+    // Used by Sign-Up
 	@Override
 	public boolean createUser(String username, String password) {
 		
-		try(PreparedStatement pstmt = connection.prepareStatement("INSERT INTO users(username, password) VALUES(?,?)")){
+		try(PreparedStatement pstmt = connection.prepareStatement("INSERT INTO users(username, password, permission) VALUES(?,?,'USER')")){
 			
 			pstmt.setString(1, username);
 			pstmt.setString(2, password);
@@ -98,12 +100,36 @@ public class UserDaoImpl implements UserDao{
 		}
 		return false;
 	}
-	
-	public boolean deleteUser(String username, String password) {
-		try(PreparedStatement pstmt = connection.prepareStatement("DELETE FROM users WHERE username = ? AND password = ?")) {
+
+    // Used by Admin
+    @Override
+    public boolean createUser(String username, String password, String permission) {
+
+        try(PreparedStatement pstmt = connection.prepareStatement("INSERT INTO users(username, password, permission) VALUES(?,?,?)")){
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            pstmt.setString(3, permission);
+
+            int rs = pstmt.executeUpdate();
+
+            if(rs > 0) return true;
+
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+	public boolean deleteUser(int user_id) {
+
+        // Need to delete from user_music first
+        deleteFromUserMusic(user_id);
+
+        try(PreparedStatement pstmt = connection.prepareStatement("DELETE FROM users WHERE user_id = ?")) {
 			
-			pstmt.setString(1, username);
-			pstmt.setString(2, password);
+			pstmt.setInt(1, user_id);
 			
 			int rs = pstmt.executeUpdate();
 			
@@ -114,14 +140,37 @@ public class UserDaoImpl implements UserDao{
 		}
 		return false;
 	}
+
+    public int getIdByUsername(String username){
+
+        try(PreparedStatement pstmt = connection.prepareStatement("SELECT user_id FROM users WHERE username = ?")) {
+
+            pstmt.setString(1, username);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()){
+                return rs.getInt("user_id");
+            }
+            else{
+                System.out.println("Invalid Username");
+            }
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
 	
-	public boolean updateUser(String username, String password, String newUsername, String newPassword) {
-		try(PreparedStatement pstmt = connection.prepareStatement("UPDATE users SET username = ?, password = ? WHERE username = ? AND password = ?")) {
+	public boolean updateUser(String username, String password, String newUsername, String newPassword, String newPermission) {
+		try(PreparedStatement pstmt = connection.prepareStatement("UPDATE users SET username = ?, password = ?, permission = ? WHERE username = ? AND password = ?")) {
 			
 			pstmt.setString(1, newUsername);
 			pstmt.setString(2, newPassword);
-			pstmt.setString(3, username);
-			pstmt.setString(4, password);
+            pstmt.setString(3, newPermission);
+			pstmt.setString(4, username);
+			pstmt.setString(5, password);
 			
 			int rs = pstmt.executeUpdate();
 			
@@ -132,7 +181,22 @@ public class UserDaoImpl implements UserDao{
 		}
 		return false;
 	}
-	
+
+    public boolean deleteFromUserMusic(int user_id) {
+
+        try(PreparedStatement pstmt = connection.prepareStatement("DELETE FROM user_music WHERE user_id = ?")) {
+
+            pstmt.setInt(1, user_id);
+
+            int rs = pstmt.executeUpdate();
+
+            if(rs > 0) return true;
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
 
 	
