@@ -19,6 +19,7 @@ CREATE TABLE user_music (
                             user_id INT,
                             music_id INT,
                             status ENUM('INCOMPLETE', 'IN-PROGRESS', 'COMPLETE'),
+                            music_progress_sec INT,
                             primary key(music_id, user_id),
                             foreign key (music_id) references music(music_id),
                             foreign key (user_id) references users(user_id)
@@ -43,16 +44,16 @@ insert into users(username, password) values('Bryan', 'Hiphop');
 insert into users(username, password) values('Darshan', 'EDM');
 
 -- User_Music
--- insert into user_music(user_id, music_id, status) values(1, 1, 'INCOMPLETE');
--- insert into user_music(user_id, music_id, status) values(1, 2, 'INCOMPLETE');
--- insert into user_music(user_id, music_id, status) values(1, 3, 'INCOMPLETE');
--- insert into user_music(user_id, music_id, status) values(1, 4, 'INCOMPLETE');
--- insert into user_music(user_id, music_id, status) values(1, 5, 'IN-PROGRESS');
--- insert into user_music(user_id, music_id, status) values(1, 6, 'COMPLETE');
--- insert into user_music(user_id, music_id, status) values(1, 7, 'IN-PROGRESS');
--- insert into user_music(user_id, music_id, status) values(3, 8, 'INCOMPLETE');
--- insert into user_music(user_id, music_id, status) values(4, 9, 'INCOMPLETE');
--- insert into user_music(user_id, music_id, status) values(4, 10, 'INCOMPLETE');
+insert into user_music(user_id, music_id, status, music_progress_sec) values(1, 1, 'INCOMPLETE', 0);
+insert into user_music(user_id, music_id, status, music_progress_sec) values(1, 2, 'INCOMPLETE', 0);
+insert into user_music(user_id, music_id, status, music_progress_sec) values(1, 3, 'INCOMPLETE', 0);
+insert into user_music(user_id, music_id, status, music_progress_sec) values(1, 4, 'INCOMPLETE', 0);
+insert into user_music(user_id, music_id, status, music_progress_sec) values(1, 5, 'IN-PROGRESS', 0);
+insert into user_music(user_id, music_id, status, music_progress_sec) values(1, 6, 'COMPLETE', 0);
+insert into user_music(user_id, music_id, status, music_progress_sec) values(1, 7, 'IN-PROGRESS', 0);
+insert into user_music(user_id, music_id, status, music_progress_sec) values(3, 8, 'INCOMPLETE', 0);
+insert into user_music(user_id, music_id, status, music_progress_sec) values(4, 9, 'INCOMPLETE', 0);
+insert into user_music(user_id, music_id, status, music_progress_sec) values(4, 10, 'INCOMPLETE', 0);
 
 -- update user_music set status = 'IN-PROGRESS' where user_id = 1 AND music_id = 1;
 -- select * from user_music;
