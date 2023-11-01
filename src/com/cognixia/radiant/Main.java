@@ -34,8 +34,9 @@ public class Main {
             System.out.println("--------------------------------------------------------------");
             System.out.println("1: Explore song list");
             System.out.println("2: Login");
-            System.out.println("3: Exit");
-            System.out.println("4: Sign Up");
+            System.out.println("3: Sign Up");
+            System.out.println("4: Exit");
+            
             int userOption = sc.nextInt();
             sc.nextLine();
 
@@ -47,11 +48,11 @@ public class Main {
                     login(sc);
                     break;
                 case 3:
-                    exit = true;
-                    break;
-                case 4:
-                	signup(sc);
+                    signup(sc);
                 	break;
+                case 4:
+                	exit = true;
+                    break;
                 default:
                     System.out.println("Sorry please choose option 1 or 2.");
             }
