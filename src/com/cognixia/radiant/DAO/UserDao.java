@@ -13,4 +13,8 @@ public interface UserDao {
     public Optional<User> getUsernameAndPassword(User user);
     
     public boolean createUser(String username, String password);
+    
+    public boolean deleteUser(String username, String password);
+    
+    public boolean updateUser(String username, String password, String newUsername, String NewPassword);
 }

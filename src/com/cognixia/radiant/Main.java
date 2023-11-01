@@ -6,6 +6,7 @@ import java.util.Scanner;
 import com.cognixia.radiant.DAO.Music;
 import com.cognixia.radiant.DAO.MusicDaoImpl;
 import com.cognixia.radiant.DAO.User;
+import com.cognixia.radiant.DAO.UserDao;
 import com.cognixia.radiant.DAO.UserDaoImpl;
 
 public class Main {
@@ -34,8 +35,9 @@ public class Main {
             System.out.println("--------------------------------------------------------------");
             System.out.println("1: Explore song list");
             System.out.println("2: Login");
-            System.out.println("3: Sign Up");
-            System.out.println("4: Exit");
+            System.out.println("3: Login as Admin");
+            System.out.println("4: Sign Up");
+            System.out.println("5: Exit");
             
             int userOption = sc.nextInt();
             sc.nextLine();
@@ -48,13 +50,15 @@ public class Main {
                     login(sc);
                     break;
                 case 3:
-                    signup(sc);
+                	adminLogin(sc);
                 	break;
                 case 4:
+                	signup(sc);
+                case 5:
                 	exit = true;
                     break;
                 default:
-                    System.out.println("Sorry please choose option 1 or 2.");
+                    System.out.println("Sorry please choose an option listed.");
             }
 
             if(exit) {
@@ -113,7 +117,104 @@ public class Main {
         user_id = userDao.getCurrUser().get().getUser_id();
         userMenu(sc);
     }
+    
+    //admin
+    static void adminLogin(Scanner sc) {
 
+        System.out.println("Please enter your username:");
+        String username = sc.nextLine();
+
+        System.out.println("Please enter your password:");
+        String password = sc.nextLine();
+
+        User user=new User(username,password);
+        userDao.getUsernameAndPassword(user);
+
+        // Maybe catch exeption here so we may loop back to menu and try to log back in again
+
+        user_id = userDao.getCurrUser().get().getUser_id();
+        adminMenu(sc);
+    }
+    
+    //Admin menu
+    static void adminMenu(Scanner sc) {
+
+        boolean userLoggedIn = true;
+
+        while (userLoggedIn) {
+            System.out.println("\nWelcome please choose an option:" );
+            System.out.println("-----------------------------------------");
+            System.out.println("1: Delete User");
+            System.out.println("2: Add User");
+            System.out.println("3: Udpdate User");
+            System.out.println("4: Go Back");
+
+            int userOption2 = sc.nextInt();
+            sc.nextLine();
+
+            switch (userOption2) {
+                case 1:
+                    deleteUser(sc);
+                    break;
+                case 2:
+                	signup(sc);
+                    break;
+                case 3:
+                    updateUser(sc);
+                    break;
+                case 4:
+                    userLoggedIn = false;
+                    break;
+                default:
+                    System.out.println("Sorry please choose option on the list.");
+            }
+
+        }
+    }
+    
+    //delete user
+    static void deleteUser(Scanner sc) {
+   	 System.out.println("Please enter a username to delete:");
+        String username = sc.nextLine();
+
+        System.out.println("Please enter the password:");
+        String password = sc.nextLine();
+        
+        userDao.deleteUser(username, password);
+        
+        System.out.println("Successfully deleted user " + username + "!");
+		
+	}
+    
+    // update user
+    static void updateUser(Scanner sc) {
+   	 System.out.println("Please enter your current username:");
+        String username = sc.nextLine();
+
+        System.out.println("Please enter your password:");
+        String password = sc.nextLine();
+        
+        System.out.println("Please enter your new username:");
+        String newUsername = sc.nextLine();
+
+        System.out.println("Please enter your new password:");
+        String newPassword = sc.nextLine();  
+        
+        userDao.updateUser(username, password, newUsername, newPassword);
+        
+        System.out.println("Successfully updated the user" + newUsername + "!");
+		
+	}
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
     static void userMenu(Scanner sc) {
 
         boolean userLoggedIn = true;

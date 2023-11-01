@@ -98,4 +98,41 @@ public class UserDaoImpl implements UserDao{
 		}
 		return false;
 	}
+	
+	public boolean deleteUser(String username, String password) {
+		try(PreparedStatement pstmt = connection.prepareStatement("DELETE FROM users WHERE username = ? AND password = ?")) {
+			
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
+			
+			int rs = pstmt.executeUpdate();
+			
+			if(rs > 0) return true;	
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean updateUser(String username, String password, String newUsername, String newPassword) {
+		try(PreparedStatement pstmt = connection.prepareStatement("UPDATE users SET username = ?, password = ? WHERE username = ? AND password = ?")) {
+			
+			pstmt.setString(1, newUsername);
+			pstmt.setString(2, newPassword);
+			pstmt.setString(3, username);
+			pstmt.setString(4, password);
+			
+			int rs = pstmt.executeUpdate();
+			
+			if(rs > 0) return true;	
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 }
+
+	
