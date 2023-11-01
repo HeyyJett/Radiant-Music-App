@@ -22,4 +22,7 @@ public interface MusicDao {
 
     //Adding music by status
     public boolean addMusicToStatus(String status, int user_id, int music_id);
+
+    //Listen to Music
+    public boolean listenToMusic(int user_id, int music_id, int seconds);
 }
