@@ -30,7 +30,7 @@ public class Main {
 
         while(true) {
 
-            System.out.println("Welcome to The Radiant Music Network hig, please choose an option!");
+            System.out.println("Welcome to The Radiant Music App, please choose an option!");
             System.out.println("--------------------------------------------------------------");
             System.out.println("1: Explore song list");
             System.out.println("2: Login");
@@ -97,15 +97,6 @@ public class Main {
 
         user_id = userDao.getCurrUser().get().getUser_id();
         userMenu(sc);
-
-//    	if (username.equals("Jason") && password.equals("123")) {
-//    		userMenu();
-//    	}
-//    	else {
-//    		System.out.println("Login Error");
-//    	}
-
-//    	sc.close();
     }
 
 
@@ -158,16 +149,6 @@ public class Main {
 
     static void addSongMenu(Scanner sc) {
 
-
-
-//	 System.out.println("\nAdding Song:");
-//	 System.out.println("------------");
-//	 System.out.println("which category would you like to add to?: ");
-//	 System.out.println("-----------------------------------------");
-// 	 System.out.println("1: Incomplete");
-//     System.out.println("2: In Progress");
-//     System.out.println("3: Complete");
-
         System.out.println("Enter the ID of the song you wish to add:");
         int userOption3 = sc.nextInt();
         sc.nextLine();
@@ -178,22 +159,6 @@ public class Main {
         if (added){
             System.out.println("You have added song " + userOption3 + " to your list.");
         }
-
-// 	switch (userOption3) {
-//     case 1:
-//     	addToIncompleteMenu(sc);
-//     	break;
-//     case 2:
-//     	addToInProgressMenu(sc);
-//     	break;
-//     case 3:
-//     	addToCompleteMenu(sc);
-//     	break;
-//     default:
-//    	 System.out.println("Sorry please choose option on the list.");
-// 	}
-
-
     }
 
     static void addSongByStatusMenu(Scanner sc) {
@@ -230,46 +195,6 @@ public class Main {
             default:
                 System.out.println("Sorry please choose option on the list.");
         }
-    }
-
-    static void addToIncompleteMenu() {
-        Scanner sc = new Scanner(System.in);
-
-        System.out.println("Please enter the title of the song: ");
-        String addTitle = sc.nextLine();
-        System.out.println("Please enter the artist of the song: ");
-        String addArtist = sc.nextLine();
-        System.out.println("Please enter the length of the song in sec: ");
-        int addLength = sc.nextInt();
-
-        System.out.println("\nThe song '" + addTitle + "' was added to 'incomplete'");
-        sc.close();
-    }
-
-    static void addToInProgressMenu() {
-        Scanner sc = new Scanner(System.in);
-
-        System.out.println("Please enter the title of the song: ");
-        String addTitle = sc.nextLine();
-        System.out.println("Please enter the artist of the song: ");
-        String addArtist = sc.nextLine();
-        System.out.println("Please enter the length of the song in sec: ");
-        int addLength = sc.nextInt();
-
-        System.out.println("\nThe song '" + addTitle + "' was added to 'in progress'");
-    }
-
-    static void addToCompleteMenu() {
-        Scanner sc = new Scanner(System.in);
-
-        System.out.println("Please enter the title of the song: ");
-        String addTitle = sc.nextLine();
-        System.out.println("Please enter the artist of the song: ");
-        String addArtist = sc.nextLine();
-        System.out.println("Please enter the length of the song in sec: ");
-        int addLength = sc.nextInt();
-
-        System.out.println("\nThe song '" + addTitle + "' was added to 'complete'");
     }
 
 }
