@@ -61,9 +61,6 @@ public class Main {
         }
     }
 
-
-
-
     static void exploreMusicList(List<Music> musicList, String status) {
 
         if(status.equals("INCOMPLETE"))
@@ -98,7 +95,6 @@ public class Main {
         user_id = userDao.getCurrUser().get().getUser_id();
         userMenu(sc);
     }
-
 
     static void userMenu(Scanner sc) {
 
@@ -145,7 +141,6 @@ public class Main {
 
         }
     }
-
 
     static void addSongMenu(Scanner sc) {
 
