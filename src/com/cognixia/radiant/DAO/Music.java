@@ -15,8 +15,11 @@ public class Music {
 
     @Override
     public String toString() {
-        return "Music [music_id=" + music_id + ", title=" + title + ", artist_name=" + artist_name + ", length_sec="
-                + length_sec + "]";
+
+        int minutes = length_sec/60;
+        int remainingSeconds = length_sec - minutes*60;
+
+        return "Song|ID:" + music_id + ", Title: " + title + ", Artist: " + artist_name + ", Duration: " + minutes + ":" + remainingSeconds + "|";
     }
 
     public int getMusic_id() {

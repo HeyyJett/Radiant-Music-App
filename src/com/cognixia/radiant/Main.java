@@ -8,6 +8,7 @@ import com.cognixia.radiant.DAO.MusicDaoImpl;
 import com.cognixia.radiant.DAO.User;
 import com.cognixia.radiant.DAO.UserDao;
 import com.cognixia.radiant.DAO.UserDaoImpl;
+import com.cognixia.radiant.exceptions.InvalidLoginException;
 
 public class Main {
 
@@ -15,6 +16,7 @@ public class Main {
     public static MusicDaoImpl musicDao = new MusicDaoImpl();
 
     public static int user_id = -1;
+    public static String Username = null;
 
     public static void main(String[] args) {
 
@@ -31,7 +33,7 @@ public class Main {
 
         while(true) {
 
-            System.out.println("Welcome to The Radiant Music App, please choose an option!");
+            System.out.println("Welcome to The Radiant Music App, please choose an option:");
             System.out.println("--------------------------------------------------------------");
             System.out.println("1: Explore song list");
             System.out.println("2: Login");
@@ -54,6 +56,7 @@ public class Main {
                 	break;
                 case 4:
                 	signup(sc);
+                    break;
                 case 5:
                 	exit = true;
                     break;
@@ -98,6 +101,7 @@ public class Main {
         for(Music m : musicList){
             System.out.println(m.toString());
         }
+        System.out.println();
 
     }
 
@@ -109,13 +113,26 @@ public class Main {
         System.out.println("Please enter your password:");
         String password = sc.nextLine();
 
-        User user=new User(username,password);
-        userDao.getUsernameAndPassword(user);
+        User user=new User(username,password, "USER");
 
-        // Maybe catch exeption here so we may loop back to menu and try to log back in again
+        try {
+            userDao.getUsernameAndPassword(user);
 
-        user_id = userDao.getCurrUser().get().getUser_id();
-        userMenu(sc);
+            // Check if user is USER
+            if(userDao.getCurrUser().get().getPermission().equals("USER")) {
+
+                user_id = userDao.getCurrUser().get().getUser_id();
+                Username = userDao.getCurrUser().get().getUsername();
+                userMenu(sc);
+            }
+            else{
+                System.out.println("Admin cannot log into user menu.");
+            }
+
+        }catch (InvalidLoginException e){
+            System.out.println(e.getMessage());
+            System.out.println();
+        }
     }
     
     //admin
@@ -127,13 +144,26 @@ public class Main {
         System.out.println("Please enter your password:");
         String password = sc.nextLine();
 
-        User user=new User(username,password);
-        userDao.getUsernameAndPassword(user);
+        User Admin = new User(username,password, "ADMIN");
 
-        // Maybe catch exeption here so we may loop back to menu and try to log back in again
+        try {
+            userDao.getUsernameAndPassword(Admin);
 
-        user_id = userDao.getCurrUser().get().getUser_id();
-        adminMenu(sc);
+            // Check if user is ADMIN
+            if(userDao.getCurrUser().get().getPermission().equals("ADMIN")) {
+
+                user_id = userDao.getCurrUser().get().getUser_id();
+                Username = userDao.getCurrUser().get().getUsername();
+                adminMenu(sc);
+            }
+            else{
+                System.out.println("Invalid admin Login.");
+            }
+
+        }catch (InvalidLoginException e){
+            System.out.println(e.getMessage());
+            System.out.println();
+        }
     }
     
     //Admin menu
@@ -142,12 +172,12 @@ public class Main {
         boolean userLoggedIn = true;
 
         while (userLoggedIn) {
-            System.out.println("\nWelcome please choose an option:" );
+            System.out.println("\nWelcome, " + Username + ". Please choose an option:" );
             System.out.println("-----------------------------------------");
             System.out.println("1: Delete User");
             System.out.println("2: Add User");
             System.out.println("3: Udpdate User");
-            System.out.println("4: Go Back");
+            System.out.println("4: Log out");
 
             int userOption2 = sc.nextInt();
             sc.nextLine();
@@ -157,7 +187,7 @@ public class Main {
                     deleteUser(sc);
                     break;
                 case 2:
-                	signup(sc);
+                    createUSer(sc);
                     break;
                 case 3:
                     updateUser(sc);
@@ -171,16 +201,32 @@ public class Main {
 
         }
     }
-    
-    //delete user
-    static void deleteUser(Scanner sc) {
-   	 System.out.println("Please enter a username to delete:");
+
+    // create user
+    static void createUSer(Scanner sc){
+
+        System.out.println("Please enter user's username:");
         String username = sc.nextLine();
 
-        System.out.println("Please enter the password:");
+        System.out.println("Please enter user's password:");
         String password = sc.nextLine();
-        
-        userDao.deleteUser(username, password);
+
+        System.out.println("Please enter user's permission:");
+        String permission = sc.nextLine();
+
+        userDao.createUser(username, password, permission);
+
+        System.out.println("Successfully created user " + username + "!");
+    }
+
+    //delete user
+    static void deleteUser(Scanner sc) {
+
+        System.out.println("Please enter a username to delete:");
+        String username = sc.nextLine();
+
+        int user_id_to_delete = userDao.getIdByUsername(username);
+        userDao.deleteUser(user_id_to_delete);
         
         System.out.println("Successfully deleted user " + username + "!");
 		
@@ -188,48 +234,42 @@ public class Main {
     
     // update user
     static void updateUser(Scanner sc) {
-   	 System.out.println("Please enter your current username:");
+   	    System.out.println("Please enter user's current username:");
         String username = sc.nextLine();
 
-        System.out.println("Please enter your password:");
+        System.out.println("Please enter user's password:");
         String password = sc.nextLine();
         
-        System.out.println("Please enter your new username:");
+        System.out.println("Please enter user's new username:");
         String newUsername = sc.nextLine();
 
-        System.out.println("Please enter your new password:");
-        String newPassword = sc.nextLine();  
+        System.out.println("Please enter user's new password:");
+        String newPassword = sc.nextLine();
+
+        System.out.println("Please enter user's new permission:");
+        String newPermission = sc.nextLine();
         
-        userDao.updateUser(username, password, newUsername, newPassword);
+        userDao.updateUser(username, password, newUsername, newPassword, newPermission);
         
         System.out.println("Successfully updated the user" + newUsername + "!");
 		
 	}
-    
-    
-    
-
-    
-    
-    
-    
-    
     
     static void userMenu(Scanner sc) {
 
         boolean userLoggedIn = true;
 
         while (userLoggedIn) {
-            System.out.println("\nWelcome please choose an option:" );
+            System.out.println("\nWelcome, " + Username + ". Please choose an option:" );
             System.out.println("-----------------------------------------");
             System.out.println("1: Display all songs");
             System.out.println("2: Display incomplete songs");
             System.out.println("3: Display in progress songs");
             System.out.println("4: Display complete songs");
             System.out.println("5: Add a song to my list");	// Uncompleted list
-            System.out.println("6: Change progress of a song");
+            System.out.println("6: Change category of a song");
             System.out.println("7: Listen to a song");
-            System.out.println("8: Go Back");
+            System.out.println("8: Log out");
 
             int userOption2 = sc.nextInt();
 
@@ -327,7 +367,7 @@ public class Main {
         int listeningTime = sc.nextInt();
         sc.nextLine();
 
-        musicDao.listenToMusic(user_id, music_id, listeningTime);
+        boolean listenedToSong = musicDao.listenToMusic(user_id, music_id, listeningTime);
 
 
     }

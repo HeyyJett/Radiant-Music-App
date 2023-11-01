@@ -3,11 +3,7 @@ package com.cognixia.radiant.DAO;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.interfaces.RSAKey;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,8 +78,18 @@ public class MusicDaoImpl implements MusicDao{
             }
 
         }
+        catch (SQLIntegrityConstraintViolationException e){
+
+            if(e.getMessage().contains("Cannot add")){
+                System.out.println("This song does not exist in the music list.");
+            }
+            else if(e.getMessage().contains("Duplicate entry")){
+                System.out.println("This song has already been added to your list.");
+            }
+
+        }
         catch(SQLException e){
-            System.out.println("Wrong ID Entered");
+            e.printStackTrace();
         }
         return false;
     }
@@ -149,10 +155,17 @@ public class MusicDaoImpl implements MusicDao{
     public boolean listenToMusic(int user_id, int music_id, int seconds) {
 
         // Need to check if status is IN-Progress
+        String status = getMusicStatus(user_id, music_id);
+        if(status == null){
+            System.out.println("The song you have entered is not in your music list.");
+            return false;
+        }
+        else if(!status.equals("IN-PROGRESS")){
+            System.out.println("The song you have selected has not been move to 'IN-PROGRESS'.");
+            return false;
+        }
 
         try(PreparedStatement pStmt = connection.prepareStatement("update user_music set music_progress_sec = ? where user_id = ? AND music_id = ?")) {
-
-            // Make calculations
 
             // We need the length of the song
             int song_length = getLengthOfSong(music_id);
@@ -162,6 +175,8 @@ public class MusicDaoImpl implements MusicDao{
 
             if (music_progress >= song_length){
                 music_progress = song_length;
+                this.addMusicToStatus("COMPLETE",user_id, music_id);
+                System.out.println("You have finished listening to this song.");
             }
 
             double percentage = (double) music_progress/song_length * 100;
@@ -174,13 +189,11 @@ public class MusicDaoImpl implements MusicDao{
 
             if(listenedToSong > 0){
 
-                if(percentage == 100){
-                    System.out.println("You have finished this song");
-                }
-                else{
+                if(percentage < 100){
                     String formattedValue = String.format("%.2f%%", percentage);
                     System.out.println("This song is currently at " + formattedValue + ".");
                 }
+
                 return true;
             }
         }
@@ -274,4 +287,25 @@ public class MusicDaoImpl implements MusicDao{
         return progress;
     }
 
+    public String getMusicStatus(int user_id, int music_id){
+
+        String status = null;
+
+        try(PreparedStatement pstmt = connection.prepareStatement("SELECT status FROM user_music WHERE music_id = ? AND user_id = ?")){
+
+            pstmt.setInt(1, music_id);
+            pstmt.setInt(2, user_id);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                status = rs.getString("status");
+            }
+        }
+        catch(SQLException e){
+            System.out.println("Error getting status of song");
+        }
+
+        return status;
+    }
 }

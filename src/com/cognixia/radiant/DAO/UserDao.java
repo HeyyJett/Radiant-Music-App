@@ -13,8 +13,10 @@ public interface UserDao {
     public Optional<User> getUsernameAndPassword(User user);
     
     public boolean createUser(String username, String password);
+
+    public boolean createUser(String username, String password, String permission);
     
-    public boolean deleteUser(String username, String password);
+    public boolean deleteUser(int user_id);
     
-    public boolean updateUser(String username, String password, String newUsername, String NewPassword);
+    public boolean updateUser(String username, String password, String newUsername, String newPassword, String newPermission);
 }
