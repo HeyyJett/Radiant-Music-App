@@ -122,6 +122,9 @@ public class MusicDaoImpl implements MusicDao{
     @Override
     public boolean addMusicToStatus(String status, int user_id, int music_id){
 
+        // Check if user added this song to his list
+
+
         // Get current Status
         String currentStatus = getCurrentMusicStatus(user_id, music_id, status);
 
@@ -156,17 +159,22 @@ public class MusicDaoImpl implements MusicDao{
 
             ResultSet rs = pStmt.executeQuery();
 
-            if(rs.next()){
+            // If Status is not empty ("INCOMPLETE", "IN-PROGRESS", "COMPLETE")
+            if(rs.next()) {
                 currentStatus = rs.getString(1);
+                
+                if (currentStatus.equals(status) ||
+                        (currentStatus.equals("INCOMPLETE") && status.equals("COMPLETE")) ||
+                        (currentStatus.equals("COMPLETE") && status.equals("IN-PROGRESS")) ||
+                        (currentStatus.equals("COMPLETE") && status.equals("INCOMPLETE")))
+                    throw new PreventCompleteFromUnComplete(currentStatus, status);
+                else
+                    return currentStatus;
             }
-
-            if 	(currentStatus.equals(status) ||
-                    (currentStatus.equals("INCOMPLETE") && status.equals("COMPLETE")) ||
-                    (currentStatus.equals("COMPLETE") && status.equals("IN-PROGRESS")) ||
-                    (currentStatus.equals("COMPLETE") && status.equals("INCOMPLETE")))
-                throw new PreventCompleteFromUnComplete(currentStatus, status);
-            else
-                return currentStatus;
+            else{
+                // This music has not been added to the list
+                System.out.println("The song you have selected has not been added to your list.");
+            }
 
         }catch (SQLException e){
             e.printStackTrace();
@@ -179,4 +187,6 @@ public class MusicDaoImpl implements MusicDao{
 
         return currentStatus;
     }
+
+
 }
