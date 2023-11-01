@@ -34,7 +34,9 @@ public class Main {
             System.out.println("--------------------------------------------------------------");
             System.out.println("1: Explore song list");
             System.out.println("2: Login");
-            System.out.println("3: Exit");
+            System.out.println("3: Sign Up");
+            System.out.println("4: Exit");
+            
             int userOption = sc.nextInt();
             sc.nextLine();
 
@@ -46,7 +48,10 @@ public class Main {
                     login(sc);
                     break;
                 case 3:
-                    exit = true;
+                    signup(sc);
+                	break;
+                case 4:
+                	exit = true;
                     break;
                 default:
                     System.out.println("Sorry please choose option 1 or 2.");
@@ -61,7 +66,20 @@ public class Main {
         }
     }
 
-    static void exploreMusicList(List<Music> musicList, String status) {
+    static void signup(Scanner sc) {
+    	 System.out.println("Please enter your desired username:");
+         String username = sc.nextLine();
+
+         System.out.println("Please enter your desired password:");
+         String password = sc.nextLine();
+         
+         userDao.createUser(username, password);
+         
+         System.out.println("Successfully created user " + username + "!");
+		
+	}
+
+	static void exploreMusicList(List<Music> musicList, String status) {
 
         if(status.equals("INCOMPLETE"))
             System.out.println("\nIncomplete Song List:");
@@ -177,14 +195,14 @@ public class Main {
                 changed = musicDao.addMusicToStatus("IN-PROGRESS", user_id, music_id);
 
                 if(changed)
-                    System.out.println("Successfully Updated the category of song " + music_id + "to In-Progress");
+                    System.out.println("Successfully Updated the category of song " + music_id + " to In-Progress");
 
                 break;
             case 2:
                 changed = musicDao.addMusicToStatus("COMPLETE", user_id, music_id);
 
                 if(changed)
-                    System.out.println("Successfully Updated the category of song " + music_id + "to Complete");
+                    System.out.println("Successfully Updated the category of song " + music_id + " to Complete");
 
                 break;
             default:

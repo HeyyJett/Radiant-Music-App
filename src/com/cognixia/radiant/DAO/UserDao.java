@@ -11,4 +11,6 @@ public interface UserDao {
     public void closeConnection() throws SQLException ;
 
     public Optional<User> getUsernameAndPassword(User user);
+    
+    public boolean createUser(String username, String password);
 }

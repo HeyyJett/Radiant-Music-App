@@ -79,4 +79,23 @@ public class UserDaoImpl implements UserDao{
     public Optional<User> getCurrUser() {
         return currUser;
     }
+
+	@Override
+	public boolean createUser(String username, String password) {
+		
+		try(PreparedStatement pstmt = connection.prepareStatement("INSERT INTO users(username, password) VALUES(?,?)")){
+			
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
+			
+			int rs = pstmt.executeUpdate();
+			
+			if(rs > 0) return true;
+			
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
