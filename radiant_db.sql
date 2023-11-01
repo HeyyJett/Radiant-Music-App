@@ -42,6 +42,7 @@ insert into users(username, password) values('Cris', 'EDM');
 insert into users(username, password) values('Jason', 'EDM');
 insert into users(username, password) values('Bryan', 'Hiphop');
 insert into users(username, password) values('Darshan', 'EDM');
+insert into users(username, password) values('Admin', 'Admin');
 
 -- User_Music
 insert into user_music(user_id, music_id, status, music_progress_sec) values(1, 1, 'INCOMPLETE', 0);
