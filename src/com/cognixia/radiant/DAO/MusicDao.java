@@ -25,4 +25,7 @@ public interface MusicDao {
 
     //Listen to Music
     public boolean listenToMusic(int user_id, int music_id, int seconds);
+
+    //Add music to Library
+    public boolean addMusicByAdmin(String title, String artist_name, int length_sec);
 }
