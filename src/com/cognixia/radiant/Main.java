@@ -89,10 +89,10 @@ public class Main {
         System.out.println("Enter a secure password:");
         String password = sc.nextLine();
          
-        userDao.createUser(username, password);
-         
-        System.out.println("Successfully created user " + username + ".");
-		
+        boolean signedup = userDao.createUser(username, password);
+
+        if(signedup)
+            System.out.println("Successfully created user " + username + ".");
 	}
 
 	static void exploreMusicList(List<Music> musicList, String status) {
@@ -265,8 +265,10 @@ public class Main {
             System.out.println("Cannot delete " + username + ". Admin is currently logged in.");
         }
         else {
-            userDao.deleteUser(user_id_to_delete);
-            System.out.println("Successfully deleted user " + username + ".");
+            boolean deleted = userDao.deleteUser(user_id_to_delete);
+
+            if(deleted)
+                System.out.println("Successfully deleted user " + username + ".");
         }
 	}
     
@@ -329,7 +331,7 @@ public class Main {
             int length_sec = sc.nextInt();
 
             musicDao.addMusicByAdmin(title, artist_name, length_sec);
-            System.out.println("Success");
+            System.out.println("Successfully added " + title + " to music library.");
 
         }catch (InputMismatchException e){
             System.out.println("Invalid Input. Please try again.");
