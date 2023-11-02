@@ -308,4 +308,23 @@ public class MusicDaoImpl implements MusicDao{
 
         return status;
     }
+
+    public boolean addMusicByAdmin(String title, String artist_name, int length_sec) {
+
+        try(PreparedStatement pstmt = connection.prepareStatement("insert into music(title, artist_name, length_sec) values(?,? ,? )")) {
+            pstmt.setString(1, title);
+            pstmt.setString(2, artist_name);
+            pstmt.setInt(3, length_sec);
+
+            int count=pstmt.executeUpdate();
+
+            if(count>0) {
+                return true;
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

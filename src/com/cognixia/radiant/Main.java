@@ -188,7 +188,8 @@ public class Main {
                 System.out.println("1: Add User");
                 System.out.println("2: Update User");
                 System.out.println("3: Delete User");
-                System.out.println("4: Log out");
+                System.out.println("4: Add song");
+                System.out.println("5: Log out");
 
                 int userOption2 = sc.nextInt();
                 sc.nextLine();
@@ -204,6 +205,9 @@ public class Main {
                         deleteUser(sc);
                         break;
                     case 4:
+                        addMusic(sc);
+                        break;
+                    case 5:
                         userLoggedIn = false;
                         break;
                     default:
@@ -311,7 +315,29 @@ public class Main {
             }
         }
 	}
-    
+
+    // Add music to Library
+    static void addMusic(Scanner sc) {
+        try {
+            System.out.println("Please enter title of the song:");
+            String title = sc.nextLine();
+
+            System.out.println("Please enter artist name: ");
+            String artist_name = sc.nextLine();
+
+            System.out.println("Please enter length of song:");
+            int length_sec = sc.nextInt();
+
+            musicDao.addMusicByAdmin(title, artist_name, length_sec);
+            System.out.println("Success");
+
+        }catch (InputMismatchException e){
+            System.out.println("Invalid Input. Please try again.");
+            sc.nextLine();
+        }
+
+    }
+
     static void userMenu(Scanner sc) {
 
         boolean userLoggedIn = true;
@@ -451,6 +477,8 @@ public class Main {
             sc.nextLine();
         }
     }
+
+
 }
 
 
