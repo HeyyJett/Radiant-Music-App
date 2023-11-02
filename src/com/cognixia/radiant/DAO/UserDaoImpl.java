@@ -2,10 +2,7 @@ package com.cognixia.radiant.DAO;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Optional;
 
 import com.cognixia.radiant.connection.ConnectionManager;
@@ -113,8 +110,13 @@ public class UserDaoImpl implements UserDao{
 
             int rs = pstmt.executeUpdate();
 
-            if(rs > 0) return true;
+            if(rs > 0)
+                return true;
 
+        }
+        catch (SQLIntegrityConstraintViolationException e){
+            System.out.println("Username already exists. Please try again.");
+            return false;
         }
         catch(SQLException e) {
             e.printStackTrace();
@@ -163,24 +165,32 @@ public class UserDaoImpl implements UserDao{
         return -1;
     }
 	
-	public boolean updateUser(String username, String password, String newUsername, String newPassword, String newPermission) {
-		try(PreparedStatement pstmt = connection.prepareStatement("UPDATE users SET username = ?, password = ?, permission = ? WHERE username = ? AND password = ?")) {
-			
-			pstmt.setString(1, newUsername);
-			pstmt.setString(2, newPassword);
+	public boolean updateUser(String username, String newUsername, String newPassword, String newPermission) {
+
+        try (PreparedStatement pstmt = connection.prepareStatement("UPDATE users SET username = ?, password = ?, permission = ? WHERE username = ?")) {
+
+            pstmt.setString(1, newUsername);
+            pstmt.setString(2, newPassword);
             pstmt.setString(3, newPermission);
-			pstmt.setString(4, username);
-			pstmt.setString(5, password);
-			
-			int rs = pstmt.executeUpdate();
-			
-			if(rs > 0) return true;	
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
+            pstmt.setString(4, username);
+
+            int rs = pstmt.executeUpdate();
+
+            if (rs > 0)
+                return true;
+            else
+                System.out.println("Username was not found. Please try again.");
+
+        } catch (SQLIntegrityConstraintViolationException e){
+            System.out.println("Username already exists. Please try again.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return false;
+    }
 
     public boolean deleteFromUserMusic(int user_id) {
 

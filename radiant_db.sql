@@ -58,10 +58,10 @@ insert into user_music(user_id, music_id, status, music_progress_sec) values(3, 
 insert into user_music(user_id, music_id, status, music_progress_sec) values(4, 9, 'INCOMPLETE', 0);
 insert into user_music(user_id, music_id, status, music_progress_sec) values(4, 10, 'INCOMPLETE', 0);
 
-select * from users;
-select * from user_music;
+-- select * from users;
+-- select * from user_music;
 
-SELECT * FROM users WHERE username = 'Cris' AND password = 'EDM';
+-- SELECT * FROM users WHERE username = 'Cris' AND password = 'EDM';
 
 -- DELETE FROM user_music where user_id = 1;
 -- DELETE FROM users WHERE user_id = 1;
