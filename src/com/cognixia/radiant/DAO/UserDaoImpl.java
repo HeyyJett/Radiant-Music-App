@@ -91,10 +91,14 @@ public class UserDaoImpl implements UserDao{
 			
 			if(rs > 0) return true;
 			
-		}
+		}catch (SQLIntegrityConstraintViolationException e){
+            System.out.println("Username already exists. Please try again.");
+            return false;
+        }
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+
 		return false;
 	}
 
@@ -135,7 +139,8 @@ public class UserDaoImpl implements UserDao{
 			
 			int rs = pstmt.executeUpdate();
 			
-			if(rs > 0) return true;	
+			if(rs > 0)
+                return true;
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -155,7 +160,7 @@ public class UserDaoImpl implements UserDao{
                 return rs.getInt("user_id");
             }
             else{
-                System.out.println("Invalid Username");
+                System.out.println("Username does not exist.");
             }
         }
         catch(SQLException e) {
